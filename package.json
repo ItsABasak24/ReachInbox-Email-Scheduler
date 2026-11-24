@@ -6,7 +6,7 @@
   "scripts": {
     "build": "npm run render-build",
     "start": "npm run render-start",
-    "render-build": "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build",
+    "render-build": "cd frontend && npm install --include=dev && npm run build && cd ../backend && npm install --include=dev && npm run build",
     "render-start": "cd backend && npm run start",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
