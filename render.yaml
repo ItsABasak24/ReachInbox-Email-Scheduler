@@ -1,0 +1,49 @@
+services:
+  # 1. Main Full-stack Web Service (Express serves API + Built React UI)
+  - type: web
+    name: outbox-email-scheduler
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm run render-build
+    startCommand: npm run render-start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: outbox-postgres
+          property: connectionString
+      - key: REDIS_URL
+        # Note: You can link a Render Redis, Upstash Redis, or Redis Cloud URL here
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: GOOGLE_CLIENT_ID
+        sync: false
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false
+      - key: GOOGLE_REDIRECT_URI
+        sync: false
+      - key: SLACK_CLIENT_ID
+        sync: false
+      - key: SLACK_CLIENT_SECRET
+        sync: false
+      - key: SLACK_REDIRECT_URI
+        sync: false
+      - key: WORKER_CONCURRENCY
+        value: "5"
+      - key: MIN_DELAY_BETWEEN_EMAILS_MS
+        value: "2000"
+      - key: MAX_EMAILS_PER_HOUR
+        value: "200"
+      - key: MAX_EMAILS_PER_HOUR_PER_SENDER
+        value: "50"
+
+# 2. Managed PostgreSQL Database on Render
+databases:
+  - name: outbox-postgres
+    plan: free
+    databaseName: outbox_db
+    user: outbox

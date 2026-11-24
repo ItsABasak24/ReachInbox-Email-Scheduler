@@ -88,7 +88,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             System
           </div>
           <a
-            href="http://localhost:3001/admin/queues"
+            href={`${import.meta.env.VITE_API_URL || ''}/admin/queues`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-sm font-medium text-dark-300 hover:text-white hover:bg-dark-800/60 transition-colors group"

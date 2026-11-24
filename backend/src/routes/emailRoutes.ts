@@ -152,24 +152,30 @@ router.get('/search', async (req: Request, res: Response) => {
     const page = parseInt(req.query.page as string || '1', 10);
     const limit = parseInt(req.query.limit as string || '20', 10);
 
-    const esResult = await elasticsearchService.searchEmails(req.user!.id, q, {
-      status,
-      page,
-      limit,
-    });
-
-    // If Elasticsearch had matches, return them
-    if (esResult.emails.length > 0 || !q) {
-      res.json(esResult);
-      return;
+    let esMatches: any[] = [];
+    if (q) {
+      try {
+        const esResult = await elasticsearchService.searchEmails(req.user!.id, q, {
+          status,
+          page,
+          limit,
+        });
+        if (esResult.emails && esResult.emails.length > 0) {
+          esMatches = esResult.emails;
+          res.json(esResult);
+          return;
+        }
+      } catch (esErr) {
+        console.warn('[EmailRoutes] Elasticsearch query failed, using DB search:', esErr);
+      }
     }
 
-    // Fallback to database search if Elasticsearch returned 0 hits
+    // Fallback to PostgreSQL database search
     const dbResult = await EmailModel.findByUserId(req.user!.id, {
       status: status as EmailStatus | undefined,
       page,
       limit,
-      search: q,
+      search: q || undefined,
     });
 
     res.json(dbResult);

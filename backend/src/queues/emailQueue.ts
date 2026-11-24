@@ -5,6 +5,7 @@ import EmailModel from '../models/email';
 
 export const redisConnection = new Redis(config.REDIS_URL, {
   maxRetriesPerRequest: null,
+  tls: config.REDIS_URL.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
 });
 
 export const QUEUE_NAME = 'email-send';

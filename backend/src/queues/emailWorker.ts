@@ -12,6 +12,7 @@ const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export const workerRedisConnection = new Redis(config.REDIS_URL, {
   maxRetriesPerRequest: null,
+  tls: config.REDIS_URL.startsWith('rediss://') ? { rejectUnauthorized: false } : undefined,
 });
 
 export let worker: Worker | null = null;

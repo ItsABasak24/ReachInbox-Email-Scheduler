@@ -53,7 +53,8 @@ export const SlackConnect: React.FC<SlackConnectProps> = ({ className = '' }) =>
   }, []);
 
   const handleConnect = () => {
-    window.location.href = '/api/slack/connect';
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    window.location.href = `${apiBase}/api/slack/connect`;
   };
 
   const handleDisconnect = async () => {

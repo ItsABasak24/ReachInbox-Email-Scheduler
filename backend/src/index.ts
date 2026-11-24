@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import path from 'path';
+import fs from 'fs';
 
 // Load dotenv from backend/.env and root .env
 dotenv.config({ path: path.resolve(__dirname, '../../.env') });
@@ -58,7 +59,20 @@ app.get('/health', (req: Request, res: Response) => {
   res.json({ status: 'ok', timestamp: new Date().toISOString() });
 });
 
-// 404 handler for unknown routes
+// Serve frontend static build in production if available
+const frontendDist = path.resolve(__dirname, '../../frontend/dist');
+if (fs.existsSync(frontendDist)) {
+  console.log(`[Express] Serving static frontend from ${frontendDist}`);
+  app.use(express.static(frontendDist));
+  app.get('*', (req: Request, res: Response, next: NextFunction) => {
+    if (req.path.startsWith('/api') || req.path.startsWith('/admin') || req.path.startsWith('/health')) {
+      return next();
+    }
+    res.sendFile(path.join(frontendDist, 'index.html'));
+  });
+}
+
+// 404 handler for unknown routes (when not serving frontend or for missing API routes)
 app.use((req: Request, res: Response) => {
   res.status(404).json({ error: `Not Found - ${req.method} ${req.originalUrl}` });
 });

@@ -4,6 +4,10 @@
   "private": true,
   "description": "Production-grade email job scheduler with BullMQ + Redis",
   "scripts": {
+    "build": "npm run render-build",
+    "start": "npm run render-start",
+    "render-build": "cd frontend && npm install && npm run build && cd ../backend && npm install && npm run build",
+    "render-start": "cd backend && npm run start",
     "docker:up": "docker-compose up -d",
     "docker:down": "docker-compose down",
     "docker:logs": "docker-compose logs -f",
@@ -12,7 +16,14 @@
     "install:all": "cd backend && npm install && cd ../frontend && npm install",
     "dev": "echo 'Run docker:up first, then backend:dev and frontend:dev in separate terminals'"
   },
-  "keywords": ["email", "scheduler", "bullmq", "redis"],
+  "keywords": [
+    "email",
+    "scheduler",
+    "bullmq",
+    "redis",
+    "postgresql",
+    "render"
+  ],
   "author": "",
   "license": "MIT"
 }

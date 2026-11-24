@@ -52,7 +52,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   }, []);
 
   const login = () => {
-    window.location.href = '/api/auth/google';
+    const apiBase = import.meta.env.VITE_API_URL || '';
+    window.location.href = `${apiBase}/api/auth/google`;
   };
 
   const logout = () => {
